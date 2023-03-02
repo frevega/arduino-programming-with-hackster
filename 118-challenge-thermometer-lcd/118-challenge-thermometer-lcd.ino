@@ -6,7 +6,7 @@
 
 // DHT-11
 DHT dht(DHTPIN, DHTTYPE);
-float humidity = NAN, celcius = NAN;
+float humidity = -1000, celcius = -1000;
 
 // LCD
 LiquidCrystal_I2C lcd(0x27, 16, 2);
@@ -44,14 +44,20 @@ void printTemp() {
     lcd.setCursor(0, 0);
     lcd.print("Failed to read  ");
     lcd.setCursor(0, 1);
-    lcd.print("temperature     ");
+    lcd.print("from DHT sensor!");
+    return;
+  } else if (humidity == -1000 && celcius == -1000) {
+    lcd.setCursor(0, 0);
+    lcd.print("Waiting for DHT ");
+    lcd.setCursor(0, 1);
+    lcd.print("sensor reading! ");
     return;
   }
 
   lcd.setCursor(0, 0);
-  lcd.print("Humidity: " + String(humidity) + "%");
+  lcd.print("H:        " + String(humidity) + "%");
   lcd.setCursor(0, 1);
-  lcd.print("Temp:    " + String(celcius));
+  lcd.print("T:       " + String(celcius));
   lcd.write(223);
   lcd.print("C");
 }
